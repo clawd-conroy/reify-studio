@@ -15,9 +15,28 @@ import components from "../src"
 
 const csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 
+// Custom hooks
+const ScrollBottom = {
+  mounted() {
+    this.scrollToBottom()
+    this.observer = new MutationObserver(() => this.scrollToBottom())
+    this.observer.observe(this.el, { childList: true, subtree: true })
+  },
+  updated() {
+    this.scrollToBottom()
+  },
+  destroyed() {
+    if (this.observer) this.observer.disconnect()
+  },
+  scrollToBottom() {
+    this.el.scrollTop = this.el.scrollHeight
+  }
+}
+
 // Merge live_react hooks with any existing hooks
 const hooks = {
   ...getHooks(components),
+  ScrollBottom,
 }
 
 const liveSocket = new LiveSocket("/live", Socket, {

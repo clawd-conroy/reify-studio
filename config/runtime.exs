@@ -147,3 +147,10 @@ if config_env() == :prod do
   #
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 end
+
+# OpenClaw Gateway - env var overrides for any environment
+if gateway_url = System.get_env("OPENCLAW_GATEWAY_URL") do
+  config :reify_studio, :openclaw,
+    gateway_url: gateway_url,
+    gateway_token: System.get_env("OPENCLAW_GATEWAY_TOKEN")
+end

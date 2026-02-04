@@ -18,6 +18,7 @@ defmodule ReifyStudioWeb.Router do
     pipe_through :browser
 
     live "/", Pages.HomeLive
+    live "/chat", Pages.ChatLive
   end
 
   # Other scopes may use custom stacks.

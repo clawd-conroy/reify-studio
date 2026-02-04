@@ -12,8 +12,8 @@ defmodule ReifyStudio.Application do
       ReifyStudio.Repo,
       {DNSCluster, query: Application.get_env(:reify_studio, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: ReifyStudio.PubSub},
-      # Start a worker by calling: ReifyStudio.Worker.start_link(arg)
-      # {ReifyStudio.Worker, arg},
+      # OpenClaw Gateway WebSocket client
+      {ReifyStudio.OpenClaw.GatewayClient, openclaw_config()},
       # Start to serve requests, typically the last entry
       ReifyStudioWeb.Endpoint
     ]
@@ -26,6 +26,13 @@ defmodule ReifyStudio.Application do
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
+  defp openclaw_config do
+    config = Application.get_env(:reify_studio, :openclaw, [])
+    url = Keyword.get(config, :gateway_url, "ws://127.0.0.1:18789")
+    token = Keyword.get(config, :gateway_token)
+    [url: url, token: token]
+  end
+
   @impl true
   def config_change(changed, _new, removed) do
     ReifyStudioWeb.Endpoint.config_change(changed, removed)
