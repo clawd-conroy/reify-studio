@@ -20,7 +20,8 @@ if System.get_env("PHX_SERVER") do
   config :reify_studio, ReifyStudioWeb.Endpoint, server: true
 end
 
-config :reify_studio, ReifyStudioWeb.Endpoint, http: [port: String.to_integer(System.get_env("PORT", "4000"))]
+config :reify_studio, ReifyStudioWeb.Endpoint,
+  http: [port: String.to_integer(System.get_env("PORT", "4000"))]
 
 # Allow DATABASE_URL and PHX_IP to override dev config (for Docker/devcontainer)
 # Only apply in dev mode - test mode uses sandbox pool

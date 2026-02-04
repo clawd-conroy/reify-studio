@@ -44,7 +44,8 @@ defmodule ReifyStudio.EventsDsl do
       unquote_splicing(
         Enum.map(events, fn {name, payload, emits, _block} ->
           quote do
-            @reify_studio_client_events {unquote(name), unquote(Macro.escape(payload)), unquote(emits)}
+            @reify_studio_client_events {unquote(name), unquote(Macro.escape(payload)),
+                                         unquote(emits)}
           end
         end)
       )
