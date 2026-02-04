@@ -8,7 +8,7 @@
 import Config
 
 config :ash_typescript,
-  ash_domains: [Reify.Demos.Todos],
+  ash_domains: [ReifyStudio.Demos.Todos],
   output_file: "assets/src/ash_rpc.ts",
   run_endpoint: "/rpc/run",
   validate_endpoint: "/rpc/validate",
@@ -60,20 +60,20 @@ config :spark,
     "Ash.Domain": [section_order: [:resources, :policies, :authorization, :domain, :execution]]
   ]
 
-config :reify,
-  ecto_repos: [Reify.Repo],
+config :reify_studio,
+  ecto_repos: [ReifyStudio.Repo],
   generators: [timestamp_type: :utc_datetime],
-  ash_domains: [Reify.Demos.Todos]
+  ash_domains: [ReifyStudio.Demos.Todos]
 
 # Configure the endpoint
-config :reify, ReifyWeb.Endpoint,
+config :reify_studio, ReifyStudioWeb.Endpoint,
   url: [host: "localhost"],
   adapter: Bandit.PhoenixAdapter,
   render_errors: [
-    formats: [html: ReifyWeb.ErrorHTML, json: ReifyWeb.ErrorJSON],
+    formats: [html: ReifyStudioWeb.ErrorHTML, json: ReifyStudioWeb.ErrorJSON],
     layout: false
   ],
-  pubsub_server: Reify.PubSub,
+  pubsub_server: ReifyStudio.PubSub,
   live_view: [signing_salt: "Xrk9D7E8"]
 
 # Configure the mailer
@@ -83,7 +83,7 @@ config :reify, ReifyWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :reify, Reify.Mailer, adapter: Swoosh.Adapters.Local
+config :reify_studio, ReifyStudio.Mailer, adapter: Swoosh.Adapters.Local
 
 # Vite handles JS bundling and Tailwind CSS via @tailwindcss/vite plugin
 # See assets/vite.config.ts for configuration

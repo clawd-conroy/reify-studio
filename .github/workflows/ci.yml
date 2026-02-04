@@ -1,7 +1,11 @@
 name: CI
 
 on:
-  # Make this workflow reusable by other workflows
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  # Also reusable by other workflows
   workflow_call:
 
 env:
@@ -54,6 +58,12 @@ jobs:
       - name: Check Elixir formatting
         run: mix format --check-formatted
 
+      - name: Run Credo
+        run: mix credo --strict
+
+      - name: Run Dialyzer
+        run: mix dialyzer
+
       - name: Check JS/TS formatting
         run: npm run format:check --prefix assets
 
@@ -70,7 +80,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: reify_test
+          POSTGRES_DB: reify_studio_test
         ports:
           - 5432:5432
         options: >-

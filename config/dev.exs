@@ -2,11 +2,11 @@ import Config
 config :ash, policies: [show_policy_breakdowns?: true]
 
 # Configure your database
-config :reify, Reify.Repo,
+config :reify_studio, ReifyStudio.Repo,
   username: "postgres",
   password: "postgres",
   hostname: "localhost",
-  database: "reify_dev",
+  database: "reify_studio_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -17,7 +17,7 @@ config :reify, Reify.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we can use it
 # to bundle .js and .css sources.
-config :reify, ReifyWeb.Endpoint,
+config :reify_studio, ReifyStudioWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}],
@@ -53,7 +53,7 @@ config :reify, ReifyWeb.Endpoint,
 # different ports.
 
 # Reload browser tabs when matching files change.
-config :reify, ReifyWeb.Endpoint,
+config :reify_studio, ReifyStudioWeb.Endpoint,
   live_reload: [
     web_console_logger: true,
     patterns: [
@@ -62,15 +62,15 @@ config :reify, ReifyWeb.Endpoint,
       # Gettext translations
       ~r"priv/gettext/.*\.po$",
       # Router, Controllers, LiveViews and LiveComponents
-      ~r"lib/reify_web/router\.ex$",
-      ~r"lib/reify_web/(controllers|live|components|pages)/.*\.(ex|heex)$",
+      ~r"lib/reify_studio_web/router\.ex$",
+      ~r"lib/reify_studio_web/(controllers|live|components|pages)/.*\.(ex|heex)$",
       # React components (HMR handles this, but needed for full reload fallback)
       ~r"assets/src/.*\.(tsx|ts|jsx|js)$"
     ]
   ]
 
 # Enable dev routes for dashboard and mailbox
-config :reify, dev_routes: true
+config :reify_studio, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
 config :logger, :default_formatter, format: "[$level] $message\n"

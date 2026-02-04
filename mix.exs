@@ -1,15 +1,16 @@
-defmodule Reify.MixProject do
+defmodule ReifyStudio.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :reify,
+      app: :reify_studio,
       version: "0.1.0",
       elixir: "~> 1.19",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
+      dialyzer: dialyzer(),
       compilers: [:phoenix_live_view] ++ Mix.compilers(),
       listeners: [Phoenix.CodeReloader],
       consolidate_protocols: Mix.env() != :dev
@@ -21,7 +22,7 @@ defmodule Reify.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Reify.Application, []},
+      mod: {ReifyStudio.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -29,6 +30,13 @@ defmodule Reify.MixProject do
   def cli do
     [
       preferred_envs: [precommit: :test]
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
+      plt_add_apps: [:mix, :ex_unit]
     ]
   end
 
@@ -75,7 +83,12 @@ defmodule Reify.MixProject do
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.2.0"},
-      {:bandit, "~> 1.5"}
+      {:bandit, "~> 1.5"},
+      # Dev/test tools
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:credo_naming, "~> 2.1", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:styler, "~> 1.2", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -101,7 +114,7 @@ defmodule Reify.MixProject do
       "dev.build": [
         "compile",
         "ash.codegen --dev",
-        "reify.gen.events_ts",
+        "reify_studio.gen.events_ts",
         "cmd npm run --prefix assets format",
         "cmd npm run --prefix assets build"
       ]

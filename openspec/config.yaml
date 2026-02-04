@@ -1,0 +1,52 @@
+schema: elixir-tdd
+
+context: |
+  ## Tech Stack
+  - Elixir 1.19+ with OTP 27
+  - Phoenix 1.8+ with LiveView 1.1+
+  - Ash Framework 3.0 for domain modeling (resources, actions, policies)
+  - AshPostgres for persistence
+  - live_react (mrdotb) for React components in LiveView
+  - React 19 / TypeScript for UI components
+  - Vite 6 for asset bundling
+  - Tailwind CSS 4.0 + DaisyUI for styling
+  - PostgreSQL 16 for database
+
+  ## Architecture
+  - Four-layer model: React → LiveView → Ash Domains → PostgreSQL
+  - "Events, Not APIs" — WebSocket-only via live_react
+  - React calls pushEvent("event_name", payload), LiveView handles in handle_event/3
+  - No REST, no GraphQL — all client-server communication via WebSocket events
+  - Ash-only domain logic — no raw Ecto queries or schemas
+
+  ## Development
+  - Devcontainer: Docker Compose with Elixir + Postgres + Node.js
+  - Formatting: mix format (Elixir), npm run format (React/TypeScript)
+  - Testing: ExUnit + Ash test helpers
+  - CI: GitHub Actions
+
+  ## Current State
+  - Working demo app with todo CRUD showing SSR, LiveReact, optimistic patterns
+  - Ash Framework integrated with AshPostgres
+  - live_react working with React 19
+  - No auth yet (AshAuthentication planned)
+
+  ## Vision
+  - Evolving from boilerplate into agent workspace/desktop app
+  - Adding chat interface, workspace viewer, document upload
+  - Exploring elixir-desktop for native desktop wrapper
+  - Target users: non-technical people who need AI agent access
+
+rules:
+  proposal:
+    - Focus on what ships, not theory
+    - Include "what does this look like to the user?"
+  specs:
+    - Use Given/When/Then for scenarios
+    - Include pushEvent/handle_event contracts for any UI features
+  design:
+    - Show the event flow (React → LiveView → Ash)
+    - Identify which Ash resources/actions are needed
+  tasks:
+    - Each task should be completable in under 2 hours
+    - Include the mix/npm commands needed
