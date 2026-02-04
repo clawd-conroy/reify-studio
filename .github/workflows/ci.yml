@@ -1,7 +1,11 @@
 name: CI
 
 on:
-  # Make this workflow reusable by other workflows
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  # Also reusable by other workflows
   workflow_call:
 
 env:
@@ -53,6 +57,9 @@ jobs:
 
       - name: Check Elixir formatting
         run: mix format --check-formatted
+
+      - name: Run Credo
+        run: mix credo --strict
 
       - name: Check JS/TS formatting
         run: npm run format:check --prefix assets
