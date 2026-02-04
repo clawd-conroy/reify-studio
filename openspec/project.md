@@ -2,9 +2,9 @@
 
 ## Purpose
 
-Reify is a boilerplate that helps founders who built apps with AI tools (Lovable, Bolt, v0) graduate from "I have a thing" to "I own and understand what I have."
+ReifyStudio is a boilerplate that helps founders who built apps with AI tools (Lovable, Bolt, v0) graduate from "I have a thing" to "I own and understand what I have."
 
-**Core insight**: The problem isn't HOW you built your app — it's that you don't understand it. Reify provides:
+**Core insight**: The problem isn't HOW you built your app — it's that you don't understand it. ReifyStudio provides:
 1. A mental model to reason about (events in, props out)
 2. A backend with guardrails (Ash Framework)
 3. A path from "AI-dependent" to "AI-assisted"
@@ -31,8 +31,8 @@ Reify is a boilerplate that helps founders who built apps with AI tools (Lovable
 
 ```
 lib/
-  reify/                    # Ash domains (future)
-  reify_web/
+  reify_studio/                    # Ash domains (future)
+  reify_studio_web/
     pages/                  # LiveViews (e.g., demo.ex)
 
 assets/
@@ -77,8 +77,8 @@ mix precommit           # Full pre-commit check
 
 **Four-Layer Model** (outer to inner):
 1. React Components (`assets/src/`) — UI, user interaction
-2. LiveView (`lib/reify_web/pages/`) — WebSocket, event routing, state
-3. Ash Domains (`lib/reify/`) — Business logic, validation, authorization (future)
+2. LiveView (`lib/reify_studio_web/pages/`) — WebSocket, event routing, state
+3. Ash Domains (`lib/reify_studio/`) — Business logic, validation, authorization (future)
 4. PostgreSQL (via AshPostgres) — Persistence (future)
 
 **Events, Not APIs**:
@@ -132,7 +132,7 @@ Buttons demonstrate:
 ## Reference Documentation
 
 Architecture and feature specs live in the companion repo:
-- `reify-admin/docs/architecture/` — Core design decisions
-- `reify-admin/docs/features/` — Feature specifications
-- `reify-admin/docs/conventions/` — Code style guides
-- `reify-admin/docs/build-order.md` — Implementation roadmap
+- `reify_studio-admin/docs/architecture/` — Core design decisions
+- `reify_studio-admin/docs/features/` — Feature specifications
+- `reify_studio-admin/docs/conventions/` — Code style guides
+- `reify_studio-admin/docs/build-order.md` — Implementation roadmap

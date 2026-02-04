@@ -1,6 +1,6 @@
 ## Context
 
-This change introduces the first Ash-backed feature to Reify. It demonstrates the recommended pattern for form handling: client-side validation for instant feedback + server-side Ash validation for business logic.
+This change introduces the first Ash-backed feature to ReifyStudio. It demonstrates the recommended pattern for form handling: client-side validation for instant feedback + server-side Ash validation for business logic.
 
 **Stakeholders:** Founders learning the stack, developers evaluating PeARL pattern
 
@@ -65,7 +65,7 @@ pushEvent('create_todo', validatedData);
 
 ### Decision 4: Single Domain for Todos
 
-**What:** Create `Reify.Todos` domain with `Reify.Todos.Todo` resource.
+**What:** Create `ReifyStudio.Todos` domain with `ReifyStudio.Todos.Todo` resource.
 
 **Why:** Follows Ash conventions. Simple, clear domain boundary. Can expand later.
 
@@ -115,7 +115,7 @@ pushEvent("create_todo", { todo: { title: "Buy milk" } });
 
 **Ash Implementation (Option B)**:
 ```elixir
-defmodule Reify.Events.CreateTodo do
+defmodule ReifyStudio.Events.CreateTodo do
   use Ash.Resource, extensions: [AshTypescript.Resource]
   # No data layer - just a validated input struct
 

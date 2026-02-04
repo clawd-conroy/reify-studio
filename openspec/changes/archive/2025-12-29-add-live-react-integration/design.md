@@ -1,6 +1,6 @@
 ## Context
 
-The Reify boilerplate uses a four-layer architecture where React handles UI and LiveView handles WebSocket communication. All client-server communication uses events (pushEvent/handleEvent), not REST or GraphQL. This requires integrating React components into LiveView pages.
+The ReifyStudio boilerplate uses a four-layer architecture where React handles UI and LiveView handles WebSocket communication. All client-server communication uses events (pushEvent/handleEvent), not REST or GraphQL. This requires integrating React components into LiveView pages.
 
 **Stakeholders**: Developers using the boilerplate, future contributors
 
@@ -84,7 +84,7 @@ The Reify boilerplate uses a four-layer architecture where React handles UI and 
 8. Update assets.setup and assets.deploy mix aliases
 9. Add live_react hooks to LiveSocket
 10. Create react-components directory with index.tsx
-11. Add react helper import to ReifyWeb
+11. Add react helper import to ReifyStudioWeb
 12. Create verification component (PingPong)
 
 **Rollback**: Revert git commit; `npm uninstall` in assets; restore esbuild config

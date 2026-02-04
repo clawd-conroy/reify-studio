@@ -4,8 +4,8 @@
 - [x] 1.3 Confirm database connection in dev
 
 ## 2. Ash Domain & Resource
-- [x] 2.1 Create `lib/reify/todos/todos.ex` domain module
-- [x] 2.2 Create `lib/reify/todos/todo.ex` resource with attributes (id, title, completed, inserted_at)
+- [x] 2.1 Create `lib/reify_studio/todos/todos.ex` domain module
+- [x] 2.2 Create `lib/reify_studio/todos/todo.ex` resource with attributes (id, title, completed, inserted_at)
 - [x] 2.3 Add actions: create, read, update_title, destroy, toggle_complete
 - [x] 2.4 Add validations: title required, max length 255
 - [x] 2.5 Add case-insensitive uniqueness constraint on title (for server validation demo)
@@ -21,7 +21,7 @@
 - [x] 3.6 Verify `assets/src/ash_rpc.ts` created with types + Zod schemas
 
 ## 4. LiveView Handler
-- [x] 4.1 Create `lib/reify_web/pages/demos/todo_demo.ex`
+- [x] 4.1 Create `lib/reify_studio_web/pages/demos/todo_demo.ex`
 - [x] 4.2 Add route at `/demos/todos` in router.ex
 - [x] 4.3 Implement mount/3 to load todos
 - [x] 4.4 Implement handle_event for: create_todo, toggle_todo, delete_todo, update_title

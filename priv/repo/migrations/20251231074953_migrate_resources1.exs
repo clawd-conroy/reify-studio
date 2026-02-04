@@ -1,4 +1,4 @@
-defmodule Reify.Repo.Migrations.MigrateResources1 do
+defmodule ReifyStudioStudioStudio.Repo.Migrations.MigrateResources1 do
   @moduledoc """
   Updates resources based on their most recent snapshots.
 

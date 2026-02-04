@@ -16,7 +16,7 @@ Currently `/` routes directly to the Counter demo, making it unclear that multip
 
 - Affected specs: None (new `demos-navigation` capability)
 - Affected code:
-  - `lib/reify_web/router.ex` - New `/demos` route, update `/` route
-  - `lib/reify_web/pages/demos/` - New `demos_live.ex` landing page (HEEx templates only)
-  - `lib/reify_web/pages/demos/counter_demo.ex` - Add breadcrumb
-  - `lib/reify_web/pages/demos/todo_demo.ex` - Add breadcrumb
+  - `lib/reify_studio_web/router.ex` - New `/demos` route, update `/` route
+  - `lib/reify_studio_web/pages/demos/` - New `demos_live.ex` landing page (HEEx templates only)
+  - `lib/reify_studio_web/pages/demos/counter_demo.ex` - Add breadcrumb
+  - `lib/reify_studio_web/pages/demos/todo_demo.ex` - Add breadcrumb

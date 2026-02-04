@@ -9,29 +9,29 @@ config :ash, policies: [show_policy_breakdowns?: true], disable_async?: true
 #
 # DATABASE_URL takes precedence if set (for CI), otherwise use individual config
 if database_url = System.get_env("DATABASE_URL") do
-  config :reify, Reify.Repo,
+  config :reify_studio, ReifyStudio.Repo,
     url: database_url,
     pool: Ecto.Adapters.SQL.Sandbox,
     pool_size: System.schedulers_online() * 2
 else
-  config :reify, Reify.Repo,
+  config :reify_studio, ReifyStudio.Repo,
     username: "postgres",
     password: "postgres",
     hostname: System.get_env("DATABASE_HOST", "localhost"),
-    database: "reify_test#{System.get_env("MIX_TEST_PARTITION")}",
+    database: "reify_studio_test#{System.get_env("MIX_TEST_PARTITION")}",
     pool: Ecto.Adapters.SQL.Sandbox,
     pool_size: System.schedulers_online() * 2
 end
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :reify, ReifyWeb.Endpoint,
+config :reify_studio, ReifyStudioWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
   secret_key_base: "THKJV/go7gbts3gnu6xgLxLU75//foHx25Ah9FrdZaCNZU5p5G+OLvsGvXotaQOd",
   server: false
 
 # In test we don't send emails
-config :reify, Reify.Mailer, adapter: Swoosh.Adapters.Test
+config :reify_studio, ReifyStudio.Mailer, adapter: Swoosh.Adapters.Test
 
 # Disable swoosh api client as it is only required for production adapters
 config :swoosh, :api_client, false

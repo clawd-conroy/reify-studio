@@ -39,7 +39,7 @@ The system SHALL automatically deploy to the staging environment when code is me
 - **WHEN** a pull request is merged to `main`
 - **THEN** the CI workflow runs
 - **AND** upon CI success, the staging deployment workflow triggers via `workflow_run`
-- **AND** the staging app at `reify-staging.fly.dev` is updated
+- **AND** the staging app at `reify_studio-staging.fly.dev` is updated
 
 #### Scenario: Staging deployment runs migrations
 - **WHEN** staging deployment occurs
@@ -54,7 +54,7 @@ The system SHALL deploy to production only when a version tag is pushed.
 - **WHEN** a git tag matching `v*` pattern is pushed (e.g., `v1.0.0`, `v0.2.1`)
 - **THEN** the CI workflow runs
 - **AND** upon CI success, the production deployment workflow triggers via `workflow_run`
-- **AND** the production app at `reify.fly.dev` is updated
+- **AND** the production app at `reify_studio.fly.dev` is updated
 - **AND** machines are scaled to multi-region (iad + sjc)
 
 #### Scenario: Non-version tags do not trigger deploy
@@ -71,7 +71,7 @@ The staging environment SHALL minimize costs by allowing machines to sleep when 
 - **AND** no compute charges accrue while sleeping
 
 #### Scenario: Staging wakes on request
-- **WHEN** a request arrives at `reify-staging.fly.dev` while machines are sleeping
+- **WHEN** a request arrives at `reify_studio-staging.fly.dev` while machines are sleeping
 - **THEN** a machine starts automatically
 - **AND** the request completes (with cold-start latency of 2-5 seconds)
 
@@ -100,9 +100,9 @@ All environments SHALL be isolated from each other.
 
 #### Scenario: Separate Fly orgs and apps
 - **WHEN** environments are configured
-- **THEN** production uses `reify` app in `reify-production` org
-- **AND** staging uses `reify-staging` app in `reify-staging` org
-- **AND** review apps use `reify-pr-{N}` apps in `personal` org
+- **THEN** production uses `reify_studio` app in `reify_studio-production` org
+- **AND** staging uses `reify_studio-staging` app in `reify_studio-staging` org
+- **AND** review apps use `reify_studio-pr-{N}` apps in `personal` org
 
 #### Scenario: Separate databases
 - **WHEN** environments are configured
@@ -132,7 +132,7 @@ The system SHALL create ephemeral review apps for each pull request.
 
 #### Scenario: PR triggers review app creation
 - **WHEN** a pull request is opened or updated
-- **THEN** a review app is created at `reify-pr-{N}.fly.dev`
+- **THEN** a review app is created at `reify_studio-pr-{N}.fly.dev`
 - **AND** an ephemeral Postgres cluster is created
 - **AND** migrations and seeds run to populate demo data
 

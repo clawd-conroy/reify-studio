@@ -26,4 +26,4 @@ Our four-layer architecture requires React components to handle UI while LiveVie
   - `assets/tsconfig.json` - update for React/strict mode
   - `assets/js/app.js` - add live_react hooks to LiveSocket
   - `assets/react-components/` - new directory for components
-  - `lib/reify_web.ex` - import live_react helpers
+  - `lib/reify_studio_web.ex` - import live_react helpers

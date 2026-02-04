@@ -1,6 +1,6 @@
 ## 1. Implementation
 
-- [x] 1.1 Create `DemosLive` LiveView at `lib/reify_web/pages/demos/demos_live.ex`
+- [x] 1.1 Create `DemosLive` LiveView at `lib/reify_studio_web/pages/demos/demos_live.ex`
 - [x] 1.2 Add demo card component with icon placeholder, title, description, and link
 - [x] 1.3 Style cards as ~300x400px side-by-side horizontal layout using Tailwind
 - [x] 1.4 Add Counter demo card: icon, "Counter Demo" title, description of SSR vs LiveReact patterns

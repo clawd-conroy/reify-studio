@@ -16,7 +16,7 @@ Currently deployment requires manual `fly deploy` commands. We need:
 
 **In scope:**
 - GitHub Actions workflows for CI (test, format, compile)
-- Staging app on Fly.io (`reify-staging`) with auto-sleep
+- Staging app on Fly.io (`reify_studio-staging`) with auto-sleep
 - Staging Postgres cluster with auto-sleep
 - Production deployment via git tags with multi-region (iad + sjc)
 - Review apps per PR with ephemeral databases
@@ -31,8 +31,8 @@ Currently deployment requires manual `fly deploy` commands. We need:
 ### Environment Strategy: Staging + Production (not Heroku-style promotion)
 
 Fly.io doesn't have Heroku's built-in "promote" feature. Instead:
-- **Staging**: Separate Fly app (`reify-staging`) in `reify-staging` org, deployed on every push to `main`
-- **Production**: Existing app (`reify`) in `reify-production` org, deployed via git tags (`v*`)
+- **Staging**: Separate Fly app (`reify_studio-staging`) in `reify_studio-staging` org, deployed on every push to `main`
+- **Production**: Existing app (`reify_studio`) in `reify_studio-production` org, deployed via git tags (`v*`)
 
 This is the standard Fly.io pattern and works well with GitHub Actions.
 
@@ -64,13 +64,13 @@ First request to staging/review may have cold-start latency (~2-5s) but signific
 ### Token Strategy: Separate Tokens Per Org
 
 Each Fly.io org has its own API token for security isolation:
-- `FLY_API_TOKEN_PRODUCTION` - for `reify-production` org
-- `FLY_API_TOKEN_STAGING` - for `reify-staging` org
+- `FLY_API_TOKEN_PRODUCTION` - for `reify_studio-production` org
+- `FLY_API_TOKEN_STAGING` - for `reify_studio-staging` org
 - `FLY_API_TOKEN_PERSONAL` - for review apps in `personal` org
 
 ## Implementation Approach
 
-1. Create staging Fly app and Postgres cluster in `reify-staging` org
+1. Create staging Fly app and Postgres cluster in `reify_studio-staging` org
 2. Add environment-specific config files:
    - `fly.production.toml` (renamed from fly.toml)
    - `fly.staging.toml`

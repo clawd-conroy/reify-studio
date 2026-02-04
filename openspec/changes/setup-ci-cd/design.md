@@ -11,7 +11,7 @@
        │                   │              ┌──────┴──────┐
        │                   │              │             │
        ▼                   ▼              ▼             ▼
-   PR opened          CI tests       reify-staging   reify
+   PR opened          CI tests       reify_studio-staging   reify_studio
    Push main          Format          (sleeps)     (always on)
    Tag v*             Compile           │             │
                                         ▼             ▼
@@ -22,27 +22,27 @@
 ## Environment Architecture
 
 ### Production Environment (existing)
-- **App name**: `reify`
-- **URL**: `reify.fly.dev`
+- **App name**: `reify_studio`
+- **URL**: `reify_studio.fly.dev`
 - **Regions**: `iad` (primary, East Coast) + `sjc` (West Coast)
 - **Machines**: 1 per region, never sleep (`auto_stop_machines: "off"`)
-- **Database**: `reify-production-db` Postgres cluster in `reify-production` org
+- **Database**: `reify_studio-production-db` Postgres cluster in `reify_studio-production` org
 - **Trigger**: Git tags matching `v*` (after CI passes via `workflow_run`)
 
 ### Staging Environment (new)
-- **App name**: `reify-staging`
-- **URL**: `reify-staging.fly.dev`
+- **App name**: `reify_studio-staging`
+- **URL**: `reify_studio-staging.fly.dev`
 - **Region**: `iad` (primary)
 - **Machines**: 0 minimum, auto-sleep after idle
-- **Database**: `reify-staging-db` Postgres cluster in `reify-staging` org
+- **Database**: `reify_studio-staging-db` Postgres cluster in `reify_studio-staging` org
 - **Trigger**: Push to `main` branch (after CI passes via `workflow_run`)
 
 ### Review App Environment (new)
-- **App name**: `reify-pr-{N}` (per PR number)
-- **URL**: `reify-pr-{N}.fly.dev`
+- **App name**: `reify_studio-pr-{N}` (per PR number)
+- **URL**: `reify_studio-pr-{N}.fly.dev`
 - **Region**: `iad`
 - **Machines**: 0 minimum, auto-sleep after idle
-- **Database**: `reify-pr-{N}-db` ephemeral Postgres (1GB, destroyed on PR close)
+- **Database**: `reify_studio-pr-{N}-db` ephemeral Postgres (1GB, destroyed on PR close)
 - **Trigger**: PR opened/updated/closed
 
 ## GitHub Actions Workflow Design
@@ -105,10 +105,10 @@ jobs:
 ### fly.staging.toml (new)
 
 ```toml
-app = "reify-staging"
+app = "reify_studio-staging"
 
 [env]
-  PHX_HOST = "reify-staging.fly.dev"
+  PHX_HOST = "reify_studio-staging.fly.dev"
 
 [http_service]
   auto_stop_machines = "stop"     # Sleep when idle
@@ -121,7 +121,7 @@ app = "reify-staging"
 ### fly.review.toml (new)
 
 ```toml
-app = "reify-review"              # Overridden by workflow
+app = "reify_studio-review"              # Overridden by workflow
 
 [deploy]
   release_command = "/app/bin/migrate_and_seed"  # Fresh demo data
@@ -139,7 +139,7 @@ app = "reify-review"              # Overridden by workflow
 Renamed to prevent accidental `fly deploy` without explicit config.
 
 ```toml
-app = "reify"
+app = "reify_studio"
 primary_region = "iad"            # DB region
 
 [http_service]
@@ -155,22 +155,22 @@ Multi-region scaling (iad + sjc) is done via `fly scale count` after deploy.
 ## Database Architecture
 
 ### Production Database
-- Cluster name: `reify-production-db`
-- Org: `reify-production`
+- Cluster name: `reify_studio-production-db`
+- Org: `reify_studio-production`
 - Configuration: Always-on, single node, 1GB memory
-- Attached to: `reify` app
+- Attached to: `reify_studio` app
 
 ### Staging Database
-- Cluster name: `reify-staging-db`
-- Org: `reify-staging`
+- Cluster name: `reify_studio-staging-db`
+- Org: `reify_studio-staging`
 - Configuration: Single node, auto-sleep enabled, 1GB memory
-- Attached to: `reify-staging` app
+- Attached to: `reify_studio-staging` app
 
 ### Review App Databases
-- Cluster name: `reify-pr-{N}-db`
+- Cluster name: `reify_studio-pr-{N}-db`
 - Org: `personal`
 - Configuration: Ephemeral, 1GB memory, destroyed on PR close
-- Attached to: `reify-pr-{N}` app
+- Attached to: `reify_studio-pr-{N}` app
 
 ### Database URL Management
 
@@ -187,14 +187,14 @@ The app handles `.flycast` → `.internal` conversion in `config/runtime.exs` fo
 - `PHX_HOST` - Set for review apps (staging/prod use fly.toml env)
 
 ### GitHub Secrets (separate per org for security)
-- `FLY_API_TOKEN_PRODUCTION` - for `reify-production` org
-- `FLY_API_TOKEN_STAGING` - for `reify-staging` org
+- `FLY_API_TOKEN_PRODUCTION` - for `reify_studio-production` org
+- `FLY_API_TOKEN_STAGING` - for `reify_studio-staging` org
 - `FLY_API_TOKEN_PERSONAL` - for review apps in `personal` org
 
 ## Cold Start Considerations
 
 ### Staging/Review App Cold Start (~2-5 seconds)
-1. User hits `reify-staging.fly.dev` or `reify-pr-{N}.fly.dev`
+1. User hits `reify_studio-staging.fly.dev` or `reify_studio-pr-{N}.fly.dev`
 2. Fly proxy wakes machine (if sleeping)
 3. Machine boots, app starts
 4. Request completes

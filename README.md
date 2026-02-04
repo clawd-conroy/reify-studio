@@ -1,10 +1,10 @@
-# Reify
+# ReifyStudio
 
-[![CI](https://github.com/reification-labs/reify/actions/workflows/ci.yml/badge.svg)](https://github.com/reification-labs/reify/actions/workflows/ci.yml)
+[![CI](https://github.com/reification-labs/reify_studio/actions/workflows/ci.yml/badge.svg)](https://github.com/reification-labs/reify_studio/actions/workflows/ci.yml)
 
 ## See it Live
 
-**[reify.fly.dev](https://reify.fly.dev/)** - Try the demos without installing anything.
+**[reify_studio.fly.dev](https://reify_studio.fly.dev/)** - Try the demos without installing anything.
 
 ---
 
@@ -21,7 +21,7 @@ You built something with Lovable, Bolt, v0, or Cursor. It works (mostly). But:
 
 ## The Solution
 
-Reify provides:
+ReifyStudio provides:
 1. **A mental model** you can reason about (events in, events out)
 2. **A backend with guardrails** that prevents chaos (Ash Framework)
 3. **A path** from "AI-dependent" to "AI-assisted"
@@ -71,8 +71,8 @@ That's it. Wait for setup, then visit the forwarded port 4000.
 Requires [Docker](https://www.docker.com/products/docker-desktop/) and VS Code with [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers).
 
 ```bash
-git clone https://github.com/conroywhitney/reify.git
-code reify
+git clone https://github.com/conroywhitney/reify_studio.git
+code reify_studio
 ```
 
 VS Code will prompt "Reopen in Container" - click it. Wait for setup, then `Cmd/Ctrl+Shift+P` → "Tasks: Run Task" → "server".
@@ -82,7 +82,7 @@ Visit [localhost:4000](http://localhost:4000).
 ### Why Not Bare Metal?
 
 Local installation without containers is **not recommended** because:
-- Reify is designed for AI-assisted development with guardrails
+- ReifyStudio is designed for AI-assisted development with guardrails
 - Containers provide sandboxing to prevent AI agents from accessing your real filesystem
 - Version mismatches between local tools cause hard-to-debug issues
 - The devcontainer ensures everyone has an identical environment
@@ -125,10 +125,10 @@ assets/               # Frontend (React + TypeScript)
     hooks/            # Shared React hooks (useClientEvent, useServerEvent)
 
 lib/                  # Backend (Elixir)
-  mix/tasks/          # Custom mix tasks (dev.build, reify.gen.events_ts)
-  reify/              # Business logic (Ash domains + resources)
+  mix/tasks/          # Custom mix tasks (dev.build, reify_studio.gen.events_ts)
+  reify_studio/              # Business logic (Ash domains + resources)
     demos/todos/      # Example: Todo domain with events
-  reify_web/          # Web layer (Phoenix LiveView)
+  reify_studio_web/          # Web layer (Phoenix LiveView)
     pages/            # LiveView pages that render React components
 
 priv/                 # Database migrations, static assets, seeds
@@ -139,7 +139,7 @@ docker-rebuild        # Reset Docker volumes (fresh start)
 docker-shell          # Open a shell in the container
 ```
 
-**The pattern:** React components live in `assets/src/`, Elixir domains in `lib/reify/`, LiveViews in `lib/reify_web/pages/`. Events flow between them via WebSocket.
+**The pattern:** React components live in `assets/src/`, Elixir domains in `lib/reify_studio/`, LiveViews in `lib/reify_studio_web/pages/`. Events flow between them via WebSocket.
 
 ## CI/CD Pipeline
 
@@ -148,17 +148,17 @@ Automated testing and deployment via GitHub Actions:
 | Trigger | Action |
 |---------|--------|
 | PR opened/updated | Run lint + tests in parallel |
-| Merge to `main` | Deploy to staging (`reify-staging.fly.dev`) |
-| Push tag `v*` | Deploy to production (`reify.fly.dev`) |
-| PR opened | Create review app (`reify-pr-{N}.fly.dev`) |
+| Merge to `main` | Deploy to staging (`reify_studio-staging.fly.dev`) |
+| Push tag `v*` | Deploy to production (`reify_studio.fly.dev`) |
+| PR opened | Create review app (`reify_studio-pr-{N}.fly.dev`) |
 
 ### Environments
 
 | Environment | URL | Behavior |
 |-------------|-----|----------|
-| Production | `reify.fly.dev` | Always-on, 2 machines minimum |
-| Staging | `reify-staging.fly.dev` | Auto-sleeps when idle (cold-start ~2-5s) |
-| Review Apps | `reify-pr-{N}.fly.dev` | Ephemeral, destroyed on PR close |
+| Production | `reify_studio.fly.dev` | Always-on, 2 machines minimum |
+| Staging | `reify_studio-staging.fly.dev` | Auto-sleeps when idle (cold-start ~2-5s) |
+| Review Apps | `reify_studio-pr-{N}.fly.dev` | Ephemeral, destroyed on PR close |
 
 ### Manual Deploys
 
@@ -175,7 +175,7 @@ fly deploy --config fly.production.toml
 ## Deployment (Fly.io)
 
 >[!NOTE]
->Replace `<app>` with your app name (e.g., `reify`) and `<app-db>` with your database name (e.g., `reify-db`) throughout.
+>Replace `<app>` with your app name (e.g., `reify_studio`) and `<app-db>` with your database name (e.g., `reify_studio-db`) throughout.
 
 ### First-Time Setup
 
@@ -242,7 +242,7 @@ fly ssh console --app <app-db>
 
 When deploying to Fly.io with an attached Postgres database, make sure to set `ECTO_IPV6=true` as a Fly secret (for example: `fly secrets set ECTO_IPV6=true`) so the app can connect over Fly's internal IPv6 network.
 
-`PHX_HOST` is configured as a non-secret environment variable in `fly.toml` and should be set to your app's hostname (e.g., `reify.fly.dev`).
+`PHX_HOST` is configured as a non-secret environment variable in `fly.toml` and should be set to your app's hostname (e.g., `reify_studio.fly.dev`).
 
 >[!WARNING]
 >The devcontainer uses placeholder values that are NOT secure for production. Never commit secrets.
@@ -285,13 +285,13 @@ mix dev.build
 ## Renaming the Project
 
 ```bash
-mix rename Reify YourApp reify your_app
+mix rename ReifyStudio YourApp reify_studio your_app
 ```
 
 **Manual steps after rename:**
-1. Update `assets/css/app.css` line 8: change `@source "../../lib/reify_web"` to `@source "../../lib/your_app_web"`
+1. Update `assets/css/app.css` line 8: change `@source "../../lib/reify_studio_web"` to `@source "../../lib/your_app_web"`
 2. Update `fly.toml` with your app name (if deploying)
-3. Verify no stray references: `grep -ri "reify" --include="*.ex" --include="*.exs" --include="*.md" --include="*.css"`
+3. Verify no stray references: `grep -ri "reify_studio" --include="*.ex" --include="*.exs" --include="*.md" --include="*.css"`
 
 ## Learn More
 

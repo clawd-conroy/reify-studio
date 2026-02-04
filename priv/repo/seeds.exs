@@ -4,11 +4,11 @@
 #
 # This is a good place to put seed data that should exist for demos.
 
-alias Reify.Demos.Todos
-alias Reify.Demos.Todos.Todo
+alias ReifyStudioStudioStudio.Demos.Todos
+alias ReifyStudioStudioStudio.Demos.Todos.Todo
 
 # Clear existing todos
-Reify.Repo.delete_all(Todo)
+ReifyStudioStudioStudio.Repo.delete_all(Todo)
 
 # Create seed todos
 seed_todos = [

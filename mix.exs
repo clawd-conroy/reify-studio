@@ -1,9 +1,9 @@
-defmodule Reify.MixProject do
+defmodule ReifyStudio.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :reify,
+      app: :reify_studio,
       version: "0.1.0",
       elixir: "~> 1.19",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -21,7 +21,7 @@ defmodule Reify.MixProject do
   # Type `mix help compile.app` for more information.
   def application do
     [
-      mod: {Reify.Application, []},
+      mod: {ReifyStudio.Application, []},
       extra_applications: [:logger, :runtime_tools]
     ]
   end
@@ -101,7 +101,7 @@ defmodule Reify.MixProject do
       "dev.build": [
         "compile",
         "ash.codegen --dev",
-        "reify.gen.events_ts",
+        "reify_studio.gen.events_ts",
         "cmd npm run --prefix assets format",
         "cmd npm run --prefix assets build"
       ]

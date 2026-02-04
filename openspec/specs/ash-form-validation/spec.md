@@ -90,7 +90,7 @@ The system SHALL support full CRUD operations for the Todo resource.
 
 #### Scenario: List todos on mount
 - **WHEN** user navigates to `/demos/todos`
-- **THEN** LiveView loads todos via `Reify.Todos.read!()`
+- **THEN** LiveView loads todos via `ReifyStudio.Todos.read!()`
 - **AND** todos are passed to React component as props
 
 #### Scenario: Create todo

@@ -1,4 +1,4 @@
-defmodule ReifyWeb.ConnCase do
+defmodule ReifyStudioWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -11,7 +11,7 @@ defmodule ReifyWeb.ConnCase do
   we enable the SQL sandbox, so changes done to the database
   are reverted at the end of every test. If you are using
   PostgreSQL, you can even run database tests asynchronously
-  by setting `use ReifyWeb.ConnCase, async: true`, although
+  by setting `use ReifyStudioWeb.ConnCase, async: true`, although
   this option is not recommended for other databases.
   """
 
@@ -20,19 +20,19 @@ defmodule ReifyWeb.ConnCase do
   using do
     quote do
       # The default endpoint for testing
-      @endpoint ReifyWeb.Endpoint
+      @endpoint ReifyStudioWeb.Endpoint
 
-      use ReifyWeb, :verified_routes
+      use ReifyStudioWeb, :verified_routes
 
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
-      import ReifyWeb.ConnCase
+      import ReifyStudioWeb.ConnCase
     end
   end
 
   setup tags do
-    Reify.DataCase.setup_sandbox(tags)
+    ReifyStudio.DataCase.setup_sandbox(tags)
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end

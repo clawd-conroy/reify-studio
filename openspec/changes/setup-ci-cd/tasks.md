@@ -2,9 +2,9 @@
 
 ## Phase 1: Staging Infrastructure
 
-- [x] **1.1** Create staging Fly app: `fly apps create reify-staging`
-- [x] **1.2** Create staging Postgres cluster: `fly postgres create --name reify-staging-db`
-- [x] **1.3** Attach staging DB to staging app: `fly postgres attach reify-staging-db -a reify-staging`
+- [x] **1.1** Create staging Fly app: `fly apps create reify_studio-staging`
+- [x] **1.2** Create staging Postgres cluster: `fly postgres create --name reify_studio-staging-db`
+- [x] **1.3** Attach staging DB to staging app: `fly postgres attach reify_studio-staging-db -a reify_studio-staging`
 - [x] **1.4** Generate and set `SECRET_KEY_BASE` for staging
 - [x] **1.5** Verify staging infrastructure
 
@@ -14,7 +14,7 @@
 - [x] **2.2** Create `fly.staging.toml` with sleep-enabled config
 - [x] **2.3** Create `fly.review.toml` for PR review apps
 - [ ] **2.4** Test manual staging deploy: `fly deploy --config fly.staging.toml`
-- [ ] **2.5** Verify staging app works: visit `reify-staging.fly.dev`
+- [ ] **2.5** Verify staging app works: visit `reify_studio-staging.fly.dev`
 
 ## Phase 3: GitHub Actions CI
 
@@ -51,6 +51,6 @@ After all phases complete:
 
 ## Notes
 
-- Production org: `reify-production`, app: `reify`, db: `reify-production-db`
-- Staging org: `reify-staging`, app: `reify-staging`, db: `reify-staging-db`
+- Production org: `reify_studio-production`, app: `reify_studio`, db: `reify_studio-production-db`
+- Staging org: `reify_studio-staging`, app: `reify_studio-staging`, db: `reify_studio-staging-db`
 - Review apps: `personal` org, ephemeral DB per PR

@@ -24,13 +24,13 @@
 ## 5. LiveView Integration
 
 - [x] 5.1 Update `assets/js/app.js` to import and register live_react hooks
-- [x] 5.2 Add `use LiveReact` or import helpers in `lib/reify_web.ex`
-- [x] 5.3 Update `lib/reify_web/components/layouts/root.html.heex` if needed for Vite assets
+- [x] 5.2 Add `use LiveReact` or import helpers in `lib/reify_studio_web.ex`
+- [x] 5.3 Update `lib/reify_studio_web/components/layouts/root.html.heex` if needed for Vite assets
 
 ## 6. Verification
 
 - [x] 6.1 Create `assets/react-components/PingPong.tsx` test component
-- [x] 6.2 Create `lib/reify_web/live/ping_pong_live.ex` LiveView
+- [x] 6.2 Create `lib/reify_studio_web/live/ping_pong_live.ex` LiveView
 - [x] 6.3 Add route for verification page
 - [x] 6.4 Test pushEvent (button click -> server) - verified via WebSocket inspection
 - [x] 6.5 Test reactive props (server assigns -> React props) - using props instead of handleEvent

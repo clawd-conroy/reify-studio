@@ -17,8 +17,8 @@ The counter demo shows basic LiveView-React integration, but doesn't demonstrate
 
 - Affected specs: Creates new `ash-form-validation` capability
 - Affected code:
-  - `lib/reify/todos/` - Ash domain and resources
-  - `lib/reify_web/pages/demos/todo_demo.ex` - LiveView
+  - `lib/reify_studio/todos/` - Ash domain and resources
+  - `lib/reify_studio_web/pages/demos/todo_demo.ex` - LiveView
   - `assets/src/demos/todos/` - React components
   - `assets/src/ash_rpc.ts` - Generated types (AshTypescript output)
   - `config/config.exs` - AshTypescript configuration
