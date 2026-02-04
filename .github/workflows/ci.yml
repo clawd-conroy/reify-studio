@@ -62,7 +62,7 @@ jobs:
         run: mix credo --strict
 
       - name: Run Dialyzer
-        run: mix dialyzer
+        run: MIX_ENV=dev mix dialyzer
 
       - name: Check JS/TS formatting
         run: npm run format:check --prefix assets
