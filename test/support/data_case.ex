@@ -35,9 +35,11 @@ defmodule ReifyStudio.DataCase do
   @doc """
   Sets up the sandbox based on the test tags.
   """
+  alias Ecto.Adapters.SQL
+
   def setup_sandbox(tags) do
-    pid = Ecto.Adapters.SQL.Sandbox.start_owner!(ReifyStudio.Repo, shared: not tags[:async])
-    on_exit(fn -> Ecto.Adapters.SQL.Sandbox.stop_owner(pid) end)
+    pid = SQL.Sandbox.start_owner!(ReifyStudio.Repo, shared: not tags[:async])
+    on_exit(fn -> SQL.Sandbox.stop_owner(pid) end)
   end
 
   @doc """

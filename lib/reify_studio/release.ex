@@ -37,16 +37,7 @@ defmodule ReifyStudio.Release do
     load_app()
 
     for repo <- repos() do
-      case Ecto.Migrator.with_repo(repo, fn _repo ->
-             seeds_path = Application.app_dir(@app, "priv/repo/seeds.exs")
-
-             if File.exists?(seeds_path) do
-               Code.eval_file(seeds_path)
-               IO.puts("Seeds completed successfully for #{inspect(repo)}")
-             else
-               IO.puts("No seeds file found at #{seeds_path}")
-             end
-           end) do
+      case Ecto.Migrator.with_repo(repo, &run_seeds/1) do
         {:ok, _, _} ->
           :ok
 
@@ -54,6 +45,17 @@ defmodule ReifyStudio.Release do
           IO.puts("ERROR: Seeding failed for #{inspect(repo)}: #{inspect(reason)}")
           System.halt(1)
       end
+    end
+  end
+
+  defp run_seeds(repo) do
+    seeds_path = Application.app_dir(@app, "priv/repo/seeds.exs")
+
+    if File.exists?(seeds_path) do
+      Code.eval_file(seeds_path)
+      IO.puts("Seeds completed successfully for #{inspect(repo)}")
+    else
+      IO.puts("No seeds file found at #{seeds_path}")
     end
   end
 

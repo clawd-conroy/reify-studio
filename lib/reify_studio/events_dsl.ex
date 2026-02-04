@@ -132,6 +132,7 @@ defmodule ReifyStudio.EventsDsl do
 
   defp generate_bindings(_), do: []
 
+  # credo:disable-for-next-line Credo.Check.Refactor.CyclomaticComplexity
   defmacro __before_compile__(_env) do
     quote do
       @doc "Returns all client events as {name, payload, emits} tuples"

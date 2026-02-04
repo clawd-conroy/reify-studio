@@ -57,9 +57,7 @@ defmodule ReifyStudio.Events do
 
   def format_error(source, %Ash.Error.Framework{errors: errors}) do
     message =
-      errors
-      |> Enum.map(&Exception.message/1)
-      |> Enum.join("; ")
+      Enum.map_join(errors, "; ", &Exception.message/1)
 
     %{
       source: source,
