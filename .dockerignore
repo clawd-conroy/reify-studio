@@ -1,0 +1,46 @@
+# Ignore .fetch files
+.fetch
+
+# Ignore _build (build artifacts)
+/_build/
+
+# Ignore deps (dependencies)
+/deps/
+
+# Ignore node_modules
+/assets/node_modules/
+
+# Ignore uploaded files
+/priv/static/uploads/
+
+# Ignore development artifacts
+*.ez
+/.elixir_ls/
+
+# Ignore test artifacts
+/cover/
+/doc/
+
+# Ignore git
+.git/
+.gitignore
+
+# Ignore IDE/editor configs
+.vscode/
+.idea/
+
+# Ignore devcontainer
+.devcontainer/
+
+# Ignore local env files
+.env
+.env.local
+*.local.exs
+
+# Ignore CI/misc
+.github/
+.dockerignore
+Dockerfile*
+# fly.toml is used by the Fly.io CLI from the repo root and is not needed inside the container image
+fly.toml
+README*

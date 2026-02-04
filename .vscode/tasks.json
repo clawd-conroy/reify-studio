@@ -1,0 +1,33 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "tests",
+      "type": "shell",
+      "command": "while [ ! -f deps/.setup-complete ]; do echo 'Waiting for setup...'; sleep 2; done && MIX_ENV=test mix test --stale --listen-on-stdin",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "label": "server",
+      "type": "shell",
+      "command": "bash .devcontainer/start-server.sh",
+      "isBackground": true,
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    }
+  ]
+}

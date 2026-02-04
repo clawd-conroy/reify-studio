@@ -1,0 +1,37 @@
+{
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^22.0.0"
+  },
+  "scripts": {
+    "dev": "vite --host -l warn",
+    "build": "tsc --noEmit && vite build",
+    "build-server": "tsc --noEmit && vite build --ssr js/server.js --out-dir ../priv/react --minify esbuild && echo '{\"type\": \"module\" }' > ../priv/react/package.json",
+    "format": "prettier --write 'src/**/*.{ts,tsx}'",
+    "format:check": "prettier --check 'src/**/*.{ts,tsx}'",
+    "types:check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.4",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "prettier": "^3.4.2",
+    "typescript": "^5.6.2",
+    "vite": "^6.3.3"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "live_react": "file:../deps/live_react",
+    "phoenix": "file:../deps/phoenix",
+    "phoenix_html": "file:../deps/phoenix_html",
+    "phoenix_live_view": "file:../deps/phoenix_live_view",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-hook-form": "^7.69.0",
+    "sonner": "^2.0.7",
+    "topbar": "^2.0.2",
+    "zod": "^4.2.1"
+  }
+}

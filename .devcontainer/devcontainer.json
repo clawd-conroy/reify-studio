@@ -1,0 +1,58 @@
+{
+  "name": "Reify Dev",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        // Elixir/Phoenix
+        "jakebecker.elixir-ls",
+        "phoenixframework.phoenix",
+
+        // React/TypeScript
+        "dsznajder.es7-react-js-snippets",
+
+        // Styling
+        "bradlc.vscode-tailwindcss",
+
+        // Linting/Formatting
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+
+        // DX improvements
+        "usernamehw.errorlens",
+        "editorconfig.editorconfig",
+        "eamodio.gitlens",
+        "streetsidesoftware.code-spell-checker"
+      ],
+      "settings": {
+        "elixirLS.dialyzerEnabled": true,
+        "elixirLS.suggestSpecs": true,
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "zsh": {
+            "path": "/bin/zsh"
+          }
+        }
+      }
+    }
+  },
+
+  "forwardPorts": [4000, 5173],
+  "portsAttributes": {
+    "4000": { "label": "Phoenix" },
+    "5173": { "label": "Vite HMR" }
+  },
+
+  "remoteUser": "elixir",
+
+  "containerEnv": {
+    "MIX_ENV": "dev",
+    "PHX_HOST": "localhost"
+  },
+
+  // Lifecycle hooks - these run during prebuild and are cached
+  "onCreateCommand": "bash .devcontainer/post-create.sh"
+}

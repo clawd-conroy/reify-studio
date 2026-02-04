@@ -1,0 +1,7 @@
+#!/bin/bash
+# Attach to running devcontainer
+# Usage:
+#   chmod +x docker-shell && ./docker-shell
+#   # or, if not executable:
+#   bash docker-shell
+docker compose -f "$(dirname "$0")/.devcontainer/docker-compose.yml" exec app zsh

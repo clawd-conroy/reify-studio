@@ -1,0 +1,30 @@
+# fly.review.toml - PR review apps on Fly.io
+# Used by GitHub Actions via superfly/fly-pr-review-apps
+# App name is set dynamically by the workflow (reify-pr-{PR_NUMBER})
+
+app = "reify-review"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[deploy]
+  # Run migrations AND seeds for review apps (fresh demo data each deploy)
+  release_command = "/app/bin/migrate_and_seed"
+
+[env]
+  # PHX_HOST is set dynamically by fly-pr-review-apps action
+  PORT = 8080
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1

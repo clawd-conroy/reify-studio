@@ -1,0 +1,68 @@
+name: reify
+
+services:
+  app:
+    container_name: reify-app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      # Main workspace - full read-write for development
+      - ..:/workspace:cached
+
+      # Override with named volumes for heavy directories
+      # These persist across container rebuilds
+      - deps:/workspace/deps
+      - build:/workspace/_build
+      - node_modules:/workspace/assets/node_modules
+
+    environment:
+      - MIX_ENV=dev
+      - DATABASE_URL=ecto://postgres:postgres@db/reify_dev
+      - DATABASE_HOST=db
+      - PHX_HOST=localhost
+      # Bind to all interfaces so Docker port mapping works
+      - PHX_IP=0.0.0.0
+      # WARNING: This SECRET_KEY_BASE is for local development ONLY.
+      # DO NOT use this value in production or any non-development environment.
+      # In production, you MUST provide a strong, random SECRET_KEY_BASE via the environment.
+      - SECRET_KEY_BASE=dev-only-secret-key-base-not-for-production-use-replace-me
+
+    depends_on:
+      db:
+        condition: service_healthy
+
+    # Expose ports for standalone docker-compose usage (without VS Code)
+    ports:
+      - "4000:4000"  # Phoenix server
+      - "5173:5173"  # Vite HMR
+
+    # Keep container running (setup runs via devcontainer onCreateCommand)
+    command: sleep infinity
+
+    # Network mode for accessing host services if needed
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  db:
+    container_name: reify-db
+    image: postgres:16-alpine  # mirrors Fly.io's current major version
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: reify_dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  deps:
+  build:
+  node_modules:
+  pgdata:
+
