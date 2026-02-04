@@ -2,137 +2,89 @@
 
 ## Purpose
 
-ReifyStudio is a boilerplate that helps founders who built apps with AI tools (Lovable, Bolt, v0) graduate from "I have a thing" to "I own and understand what I have."
+Reify Studio is a desktop application for interacting with AI agents. It provides a native-quality chat interface and workspace viewer, built on the PeARL Stack (Phoenix, Ash, React, LiveView).
 
-**Core insight**: The problem isn't HOW you built your app — it's that you don't understand it. ReifyStudio provides:
-1. A mental model to reason about (events in, props out)
-2. A backend with guardrails (Ash Framework)
-3. A path from "AI-dependent" to "AI-assisted"
+**Core insight**: Current agent interfaces are either too simple (chat boxes) or too complex (IDE-like dashboards). Reify Studio sits in the middle — a focused workspace for talking to your agent and seeing what it's doing.
 
 **Target users**:
-- Primary: Founders at the "Lovable plateau" who want independence, not permanent dependency
-- Secondary: Developers exploring Phoenix/Ash ecosystem
+- Developers and power users running AI agents (OpenClaw, local models, etc.)
+- People who want a better interface than web UIs and TUIs
 
 ## Tech Stack
 
-- **Elixir** ~1.17+ with OTP
+- **Elixir** 1.19+ with OTP
 - **Phoenix** 1.8+ with LiveView 1.1+
-- **Ash Framework** 3.0 for domain modeling (resources, actions, policies) — not yet integrated
-- **AshPostgres** for persistence — not yet integrated
-- **AshAuthentication** for magic link auth — not yet integrated
-- **live_react** (mrdotb) for React components in LiveView ✓
-- **React 19** / TypeScript for UI components ✓
-- **Vite 6** for asset bundling (replaced esbuild) ✓
-- **Tailwind CSS** 4.0 for styling ✓
-- **PostgreSQL** 14+ for database
-- **Fly.io** for deployment
+- **Ash Framework** 3.0 for domain modeling
+- **AshPostgres** for persistence
+- **live_react** for React components in LiveView
+- **React 19** / TypeScript for UI components
+- **Vite 6** for asset bundling
+- **Tailwind CSS** 4.0 + DaisyUI for styling
+- **PostgreSQL** 16 for database
+- **Fresh** (Mint WebSocket) for OpenClaw Gateway connection
+- **ElixirKit + Tauri** for desktop packaging (future)
 
 ## Project Structure
 
 ```
 lib/
-  reify_studio/                    # Ash domains (future)
+  reify_studio/
+    open_claw/              # Gateway WebSocket client
+    event_router.ex         # Reusable event routing DSL
+    events.ex               # Error formatting helpers
+    events_dsl.ex           # Bidirectional event DSL
   reify_studio_web/
-    pages/                  # LiveViews (e.g., demo.ex)
+    pages/                  # LiveViews
+      home_live.ex          # Landing page
+      chat_live.ex          # Agent chat interface
 
 assets/
   src/                      # React components
     index.tsx               # Component registry for live_react
-    demo/                   # Demo components
-      layout/               # DemoLayout, DemoPage, DemoHeader
-      components/
-        buttons/            # DemoButton, DemoButtons
-        cards/              # DemoCard variants (SSR, LiveReact, Optimistic)
-      hooks/                # useDemo context
-    utils/                  # Helpers (timeWithMs)
+    hooks/                  # Reusable React hooks
 
 openspec/
-  specs/                    # Source-of-truth specifications
-  changes/                  # Feature proposals
+  changes/                  # Feature proposals (OPSX workflow)
   project.md                # This file
+  schemas/                  # OPSX schema templates
 ```
+
+## Architecture
+
+**Events, Not APIs**:
+- No REST, no GraphQL
+- WebSocket-only via live_react + Phoenix channels
+- React calls `pushEvent("event_name", payload)`
+- LiveView handles in `handle_event/3`, updates assigns
+
+**Agent Communication**:
+- Connects to OpenClaw Gateway via WebSocket (JSON-RPC)
+- RPC methods: `chat.send`, `chat.history`, `chat.abort`
+- Event streaming via PubSub broadcast
+- Configurable endpoint URL + auth token (not hardcoded to one agent)
+
+## Current State
+
+- [x] PeARL Stack foundation (Phoenix + Ash + React + LiveView)
+- [x] EventRouter / Events DSL (reusable)
+- [x] Dev tooling (Credo, Dialyzer, Styler)
+- [x] OpenClaw Gateway WebSocket client
+- [x] LiveView chat interface with streaming
+- [ ] Workspace file viewer
+- [ ] Desktop packaging (ElixirKit + Tauri)
+- [ ] Authentication
+- [ ] Settings page (endpoint config)
 
 ## Code Style
 
-### Elixir
-- `mix format` — run before committing
-- Use Ash DSL for domain modeling — no raw Ecto schemas
-- Authorization lives in Ash policies, not scattered in LiveViews
-- See root `AGENTS.md` for comprehensive Phoenix guidelines
-
-### React/TypeScript
-- `npm run format` (prettier) — run before committing
-- Functional components with hooks
-- Props interface includes `pushEvent` from live_react
-- Components registered in `assets/src/index.tsx`
-
-### Formatting Commands
-```bash
-mix format              # Elixir
-cd assets && npm run format   # React/TypeScript
-mix precommit           # Full pre-commit check
-```
-
-## Architecture Pattern
-
-**Four-Layer Model** (outer to inner):
-1. React Components (`assets/src/`) — UI, user interaction
-2. LiveView (`lib/reify_studio_web/pages/`) — WebSocket, event routing, state
-3. Ash Domains (`lib/reify_studio/`) — Business logic, validation, authorization (future)
-4. PostgreSQL (via AshPostgres) — Persistence (future)
-
-**Events, Not APIs**:
-- No REST, no GraphQL, no tRPC
-- WebSocket-only via live_react
-- React calls `pushEvent("event_name", payload)`
-- LiveView handles in `handle_event/3`, updates assigns
-- Assigns automatically become React props
-
-**The Mental Model**:
-```
-React              LiveView           Assigns
-  |                   |                  |
-  |--pushEvent------->|                  |
-  |                   |--update--------->|
-  |                   |                  |
-  |<--new props-------|<--render---------|
-```
-
-## Current Demo
-
-The demo at `/` and `/demo` shows 4 cards, each building on the previous:
-
-1. **SSR Card** — Server-side render only, shows mount time
-2. **LiveReact Card** — Server props flow down, tracks server update time
-3. **LiveReact + Local Card** — Server props + React context for local state
-4. **Optimistic Card** — Immediate UI updates with server reconciliation on response
-
-Buttons demonstrate:
-- `+1 Local` — Pure client-side state (never hits server)
-- `+1 Server` — Immediate server round-trip
-- `+1 Server (Slow)` — 1s delay to show loading state
-- `+1 Optimistic` — Immediate UI + slow server (shows optimistic pattern)
-- `+1 Error` — Optimistic with server error (shows rollback)
+- `mix format` + `mix credo --strict` before committing
+- `npm run format` for React/TypeScript
+- `mix precommit` runs the full check suite
+- Ash DSL for domain modeling — no raw Ecto schemas
 
 ## Important Constraints
 
-- **No REST/GraphQL**: All client-server communication via WebSocket events
-- **Ash-only domain logic**: No raw Ecto queries or schemas (when Ash is integrated)
-- **Secure by default**: Deny-all policies unless explicitly allowed
-- **Single-tenant for v1**: No multi-tenancy complexity
+- **Agent-agnostic**: Works with any agent exposing a compatible WebSocket API
+- **OpenClaw-compatible**: First-class support for OpenClaw Gateway protocol
+- **Desktop-first**: Designed for ElixirKit + Tauri packaging (web works too)
 - **Boring is good**: No clever tricks, just explicit data flow
-
-## What's Next (Build Order)
-
-1. ~~CLI scaffolding~~ ✓
-2. ~~live_react integration~~ ✓
-3. **Authentication** — Magic link via AshAuthentication
-4. **Example features** — Counter (stateless) + Todo (with Ash resource)
-
-## Reference Documentation
-
-Architecture and feature specs live in the companion repo:
-- `reify_studio-admin/docs/architecture/` — Core design decisions
-- `reify_studio-admin/docs/features/` — Feature specifications
-- `reify_studio-admin/docs/conventions/` — Code style guides
-- `reify_studio-admin/docs/build-order.md` — Implementation roadmap
