@@ -33,6 +33,7 @@ defmodule ReifyStudio.Release do
     end
   end
 
+  # credo:disable-for-lines:20 Credo.Check.Refactor.Nesting
   def seed do
     load_app()
 

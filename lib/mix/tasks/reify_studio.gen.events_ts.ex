@@ -69,9 +69,7 @@ defmodule Mix.Tasks.ReifyStudio.Gen.EventsTs do
 
     # Generate each domain's section
     domain_sections =
-      domains
-      |> Enum.map(&generate_domain_section/1)
-      |> Enum.join("\n")
+      Enum.map_join(domains, "\n", &generate_domain_section/1)
 
     """
     /**
@@ -119,12 +117,10 @@ defmodule Mix.Tasks.ReifyStudio.Gen.EventsTs do
 
   defp generate_payload_mapping(prefix, client_events) do
     mapping_entries =
-      client_events
-      |> Enum.map(fn {name, _payload, _emits} ->
+      Enum.map_join(client_events, "\n", fn {name, _payload, _emits} ->
         type_name = to_input_type_name(name)
         "  \"#{name}\": #{type_name};"
       end)
-      |> Enum.join("\n")
 
     """
     export type #{prefix}ClientEventPayloads = {
@@ -134,23 +130,22 @@ defmodule Mix.Tasks.ReifyStudio.Gen.EventsTs do
   end
 
   defp generate_const(events) do
-    events
-    |> Enum.map(fn event ->
+    Enum.map_join(events, "\n", fn event ->
       event_name = elem(event, 0)
       const_name = event_name |> to_string() |> String.upcase()
       "  #{const_name}: \"#{event_name}\","
     end)
-    |> Enum.join("\n")
   end
 
   # Convert snake_case event name to PascalCase input type name
   # create_todo -> CreateTodoInput
   defp to_input_type_name(event_name) do
-    event_name
-    |> to_string()
-    |> String.split("_")
-    |> Enum.map(&String.capitalize/1)
-    |> Enum.join()
-    |> Kernel.<>("Input")
+    pascal =
+      event_name
+      |> to_string()
+      |> String.split("_")
+      |> Enum.map_join(&String.capitalize/1)
+
+    pascal <> "Input"
   end
 end

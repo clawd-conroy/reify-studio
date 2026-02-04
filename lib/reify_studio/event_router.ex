@@ -152,10 +152,8 @@ defmodule ReifyStudio.EventRouter do
 
   # Handle unknown events with logging and generic error
   defp handle_unknown_event(event_name, params, socket) do
-    Logger.warning("Unknown event received",
-      event: event_name,
-      params: inspect(Map.keys(params)),
-      live_view: socket.view
+    Logger.warning(
+      "Unknown event received: #{event_name} params=#{inspect(Map.keys(params))} view=#{inspect(socket.view)}"
     )
 
     socket =

@@ -12,7 +12,9 @@ defmodule ReifyStudio.MixProject do
       deps: deps(),
       compilers: [:phoenix_live_view] ++ Mix.compilers(),
       listeners: [Phoenix.CodeReloader],
-      consolidate_protocols: Mix.env() != :dev
+      consolidate_protocols: Mix.env() != :dev,
+      dialyzer: dialyzer(),
+      test_coverage: [threshold: 80.0]
     ]
   end
 
@@ -75,7 +77,20 @@ defmodule ReifyStudio.MixProject do
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.2.0"},
-      {:bandit, "~> 1.5"}
+      {:bandit, "~> 1.5"},
+      # Dev/test tooling
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:credo_naming, "~> 2.1", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      {:styler, "~> 1.10", only: [:dev, :test], runtime: false}
+    ]
+  end
+
+  defp dialyzer do
+    [
+      plt_core_path: "priv/plts/core.plt",
+      plt_local_path: "priv/plts/project.plt",
+      flags: [:error_handling, :underspecs]
     ]
   end
 
@@ -97,7 +112,13 @@ defmodule ReifyStudio.MixProject do
         "cmd npm run --prefix assets build",
         "phx.digest"
       ],
-      precommit: ["compile --warnings-as-errors", "deps.unlock --unused", "format", "test"],
+      precommit: [
+        "compile --warnings-as-errors",
+        "deps.unlock --unused",
+        "format",
+        "credo --strict",
+        "test"
+      ],
       "dev.build": [
         "compile",
         "ash.codegen --dev",
