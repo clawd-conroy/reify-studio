@@ -2,7 +2,18 @@ import Config
 
 # Load .env file if present (dev/test convenience, ignored in prod releases)
 if config_env() != :prod do
-  Dotenvy.source([".env", ".env.#{config_env()}"])
+  for file <- [".env", ".env.#{config_env()}"], File.exists?(file) do
+    file
+    |> File.read!()
+    |> String.split("\n", trim: true)
+    |> Enum.reject(&(String.starts_with?(&1, "#") or &1 == ""))
+    |> Enum.each(fn line ->
+      case String.split(line, "=", parts: 2) do
+        [key, value] -> System.put_env(String.trim(key), String.trim(value))
+        _ -> :skip
+      end
+    end)
+  end
 end
 
 # config/runtime.exs is executed for all environments, including
