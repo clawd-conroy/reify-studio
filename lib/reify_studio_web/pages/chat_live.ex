@@ -13,17 +13,21 @@ defmodule ReifyStudioWeb.Pages.ChatLive do
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket) do
-      GatewayClient.subscribe()
-      send(self(), :load_history)
-    end
+    gateway_connected =
+      if connected?(socket) do
+        GatewayClient.subscribe()
+        send(self(), :load_history)
+        GatewayClient.connected?()
+      else
+        false
+      end
 
     {:ok,
      assign(socket,
        page_title: "Chat",
        messages: [],
        input: "",
-       connected: false,
+       connected: gateway_connected,
        loading: true,
        streaming: false,
        stream_buffer: ""
