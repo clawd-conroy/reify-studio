@@ -36,9 +36,7 @@ defmodule ReifyStudio.Application do
 
   defp openclaw_config do
     config = Application.get_env(:reify_studio, :openclaw, [])
-    url = Keyword.get(config, :gateway_url, "ws://127.0.0.1:18789")
-    token = Keyword.get(config, :gateway_token)
-    [url: url, token: token]
+    [url: Keyword.fetch!(config, :gateway_url), token: Keyword.get(config, :gateway_token)]
   end
 
   @impl true
