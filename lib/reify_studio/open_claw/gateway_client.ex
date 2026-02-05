@@ -84,6 +84,7 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
       connected: false,
       hello: nil,
       pending_requests: %{},
+      pending_connect_id: nil,
       seq: 0
     }
 
@@ -147,8 +148,8 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
   @impl true
   def handle_info(:ws_connected, state) do
     Logger.info("OpenClaw WebSocket transport ready")
-    send_connect_frame(state)
-    {:noreply, state}
+    connect_id = send_connect_frame(state)
+    {:noreply, %{state | pending_connect_id: connect_id}}
   end
 
   @impl true
@@ -192,11 +193,9 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
 
   # --- Frame Handling ---
 
+  # Legacy hello-ok handler (kept for compatibility)
   defp handle_frame(%{"type" => "hello-ok"} = hello, state) do
-    version = get_in(hello, ["server", "version"]) || "unknown"
-    Logger.info("Connected to OpenClaw gateway v#{version}")
-    broadcast({:openclaw, :connected, hello})
-    {:noreply, %{state | connected: true, hello: hello}}
+    handle_hello(hello, state)
   end
 
   defp handle_frame(%{"type" => "event", "event" => "tick"}, state) do
@@ -211,13 +210,17 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
   end
 
   defp handle_frame(%{"type" => "res", "id" => id, "ok" => true} = res, state) do
-    case Map.pop(state.pending_requests, id) do
-      {nil, _} ->
-        {:noreply, state}
+    if id == state.pending_connect_id do
+      handle_hello(res, %{state | pending_connect_id: nil})
+    else
+      case Map.pop(state.pending_requests, id) do
+        {nil, _} ->
+          {:noreply, state}
 
       {from, pending} ->
         GenServer.reply(from, {:ok, Map.get(res, "payload")})
         {:noreply, %{state | pending_requests: pending}}
+    end
     end
   end
 
@@ -233,6 +236,14 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
   end
 
   defp handle_frame(_frame, state), do: {:noreply, state}
+
+  defp handle_hello(hello, state) do
+    payload = Map.get(hello, "payload", hello)
+    version = get_in(payload, ["server", "version"]) || "unknown"
+    Logger.info("Connected to OpenClaw gateway v#{version}")
+    broadcast({:openclaw, :connected, payload})
+    {:noreply, %{state | connected: true, hello: payload}}
+  end
 
   # --- Helpers ---
 
@@ -255,6 +266,8 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
   end
 
   defp send_connect_frame(state) do
+    request_id = generate_id()
+
     connect_params = %{
       "minProtocol" => 3,
       "maxProtocol" => 3,
@@ -278,12 +291,13 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
     frame =
       Jason.encode!(%{
         "type" => "req",
-        "id" => generate_id(),
+        "id" => request_id,
         "method" => "connect",
         "params" => connect_params
       })
 
     Fresh.send(state.ws_pid, {:text, frame})
+    request_id
   end
 
   defp build_ws_url(base_url, _token) do
