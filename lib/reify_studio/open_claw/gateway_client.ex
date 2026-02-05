@@ -256,8 +256,8 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
 
   defp send_connect_frame(state) do
     connect_params = %{
-      "minProtocol" => 1,
-      "maxProtocol" => 1,
+      "minProtocol" => 3,
+      "maxProtocol" => 3,
       "client" => %{
         "id" => "webchat",
         "displayName" => "Reify Studio",
