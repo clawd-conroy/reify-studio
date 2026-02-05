@@ -148,8 +148,8 @@ defmodule ReifyStudioWeb.Pages.ChatLive do
   end
 
   @impl true
-  def handle_info({:openclaw, :event, "agent", payload, _seq}, socket) do
-    handle_agent_event(payload, socket)
+  def handle_info({:openclaw, :event, "chat", payload, _seq}, socket) do
+    handle_chat_event(payload, socket)
   end
 
   @impl true
@@ -181,14 +181,32 @@ defmodule ReifyStudioWeb.Pages.ChatLive do
     {:noreply, socket}
   end
 
-  # --- Agent Event Handling ---
+  # --- Chat Event Handling ---
 
-  defp handle_agent_event(%{"kind" => "chunk", "text" => text}, socket) do
-    {:noreply, update(socket, :stream_buffer, &(&1 <> text))}
+  # Final message — the complete response
+  defp handle_chat_event(%{"state" => "final", "message" => message}, socket)
+       when is_map(message) do
+    text = extract_text(message)
+
+    if text && text != "" do
+      msg = %{role: "assistant", content: text, timestamp: DateTime.utc_now()}
+
+      {:noreply,
+       socket
+       |> update(:messages, &(&1 ++ [msg]))
+       |> assign(streaming: false, stream_buffer: "")}
+    else
+      {:noreply, assign(socket, streaming: false, stream_buffer: "")}
+    end
   end
 
-  defp handle_agent_event(%{"kind" => "message", "role" => "assistant", "text" => text}, socket) do
-    msg = %{role: "assistant", content: text, timestamp: DateTime.utc_now()}
+  defp handle_chat_event(%{"state" => "final"}, socket) do
+    {:noreply, assign(socket, streaming: false, stream_buffer: "")}
+  end
+
+  # Error
+  defp handle_chat_event(%{"state" => "error", "errorMessage" => err}, socket) do
+    msg = %{role: "assistant", content: "⚠️ Error: #{err}", timestamp: DateTime.utc_now()}
 
     {:noreply,
      socket
@@ -196,26 +214,18 @@ defmodule ReifyStudioWeb.Pages.ChatLive do
      |> assign(streaming: false, stream_buffer: "")}
   end
 
-  defp handle_agent_event(%{"kind" => "done"}, socket) do
-    if socket.assigns.stream_buffer != "" do
-      msg = %{
-        role: "assistant",
-        content: socket.assigns.stream_buffer,
-        timestamp: DateTime.utc_now()
-      }
-
-      {:noreply,
-       socket
-       |> update(:messages, &(&1 ++ [msg]))
-       |> assign(streaming: false, stream_buffer: "")}
-    else
-      {:noreply, assign(socket, streaming: false)}
-    end
-  end
-
-  defp handle_agent_event(_payload, socket) do
+  # Ignore deltas for now (streaming chunks)
+  defp handle_chat_event(%{"state" => "delta"}, socket) do
     {:noreply, socket}
   end
+
+  defp handle_chat_event(_payload, socket) do
+    {:noreply, socket}
+  end
+
+  defp extract_text(%{"content" => [%{"type" => "text", "text" => text} | _]}), do: text
+  defp extract_text(%{"content" => content}) when is_binary(content), do: content
+  defp extract_text(_), do: nil
 
   # --- Helpers ---
 
