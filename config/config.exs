@@ -8,7 +8,7 @@
 import Config
 
 config :ash_typescript,
-  ash_domains: [ReifyStudio.Demos.Todos],
+  ash_domains: [],
   output_file: "assets/src/ash_rpc.ts",
   run_endpoint: "/rpc/run",
   validate_endpoint: "/rpc/validate",
@@ -63,7 +63,7 @@ config :spark,
 config :reify_studio,
   ecto_repos: [ReifyStudio.Repo],
   generators: [timestamp_type: :utc_datetime],
-  ash_domains: [ReifyStudio.Demos.Todos]
+  ash_domains: []
 
 # Configure the endpoint
 config :reify_studio, ReifyStudioWeb.Endpoint,

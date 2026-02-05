@@ -48,7 +48,7 @@ defmodule Mix.Tasks.ReifyStudio.Gen.EventsTs do
 
   defp discover_events_modules do
     # For now, hardcode. Could use :application.get_key(:reify_studio, :modules) + filtering
-    [ReifyStudio.Demos.Todos.Events]
+    []
   end
 
   defp generate_consolidated_typescript(domains) do
