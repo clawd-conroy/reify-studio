@@ -12,6 +12,7 @@ defmodule ReifyStudio.OpenClaw.GatewayWs do
 
   @impl Fresh
   def handle_connect(_status, _headers, state) do
+    Logger.metadata(context: "openclaw.ws")
     Logger.debug("OpenClaw WebSocket transport connected")
     send(state.parent, :ws_connected)
     {:ok, state}

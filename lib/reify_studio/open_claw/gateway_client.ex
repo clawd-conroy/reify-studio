@@ -22,6 +22,8 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
 
   require Logger
 
+  @logger_metadata [context: "openclaw.gateway"]
+
   alias Phoenix.PubSub
   alias ReifyStudio.OpenClaw.GatewayWs
 
@@ -69,6 +71,7 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
 
   @impl true
   def init(opts) do
+    Logger.metadata(@logger_metadata)
     url = Keyword.fetch!(opts, :url)
     token = Keyword.get(opts, :token)
 

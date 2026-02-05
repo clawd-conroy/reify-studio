@@ -56,3 +56,4 @@ npm-debug.log
 
 # Devcontainer setup marker (in deps volume, auto-ignored via /deps/)
 
+priv/plts/
