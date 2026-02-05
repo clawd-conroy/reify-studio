@@ -75,6 +75,8 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
     url = Keyword.fetch!(opts, :url)
     token = Keyword.get(opts, :token)
 
+    Logger.info("Connecting to OpenClaw gateway at #{url}")
+
     state = %{
       url: url,
       token: token,
