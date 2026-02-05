@@ -4,8 +4,8 @@ config :ash, policies: [show_policy_breakdowns?: true]
 # OpenClaw Gateway connection
 # Override via OPENCLAW_GATEWAY_URL and OPENCLAW_GATEWAY_TOKEN env vars
 config :reify_studio, :openclaw,
-  gateway_url: System.get_env("OPENCLAW_GATEWAY_URL", "ws://host.docker.internal:18789"),
-  gateway_token: System.get_env("OPENCLAW_GATEWAY_TOKEN")
+  gateway_url: "ws://host.docker.internal:18789",
+  gateway_token: nil
 
 # Configure your database
 config :reify_studio, ReifyStudio.Repo,

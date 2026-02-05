@@ -154,9 +154,17 @@ if config_env() == :prod do
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 end
 
-# OpenClaw Gateway - env var overrides for any environment
-if gateway_url = System.get_env("OPENCLAW_GATEWAY_URL") do
-  config :reify_studio, :openclaw,
-    gateway_url: gateway_url,
-    gateway_token: System.get_env("OPENCLAW_GATEWAY_TOKEN")
+# OpenClaw Gateway - env vars override dev.exs defaults (after .env loaded above)
+openclaw_url = System.get_env("OPENCLAW_GATEWAY_URL")
+openclaw_token = System.get_env("OPENCLAW_GATEWAY_TOKEN")
+
+if openclaw_url || openclaw_token do
+  existing = Application.get_env(:reify_studio, :openclaw, [])
+
+  overrides =
+    []
+    |> then(fn acc -> if openclaw_url, do: [{:gateway_url, openclaw_url} | acc], else: acc end)
+    |> then(fn acc -> if openclaw_token, do: [{:gateway_token, openclaw_token} | acc], else: acc end)
+
+  config :reify_studio, :openclaw, Keyword.merge(existing, overrides)
 end
