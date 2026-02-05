@@ -147,6 +147,7 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
   @impl true
   def handle_info(:ws_connected, state) do
     Logger.info("OpenClaw WebSocket transport ready")
+    send_connect_frame(state)
     {:noreply, state}
   end
 
@@ -253,7 +254,7 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
     end
   end
 
-  defp build_ws_url(base_url, token) do
+  defp send_connect_frame(state) do
     connect_params = %{
       "minProtocol" => 1,
       "maxProtocol" => 1,
@@ -268,14 +269,25 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
     }
 
     connect_params =
-      if token do
-        Map.put(connect_params, "auth", %{"token" => token})
+      if state.token do
+        Map.put(connect_params, "auth", %{"token" => state.token})
       else
         connect_params
       end
 
-    encoded = URI.encode(Jason.encode!(connect_params))
-    "#{base_url}/?connect=#{encoded}"
+    frame =
+      Jason.encode!(%{
+        "type" => "req",
+        "id" => generate_id(),
+        "method" => "connect",
+        "params" => connect_params
+      })
+
+    Fresh.send(state.ws_pid, {:text, frame})
+  end
+
+  defp build_ws_url(base_url, _token) do
+    base_url
   end
 
   defp fail_pending_requests(state, reason) do
