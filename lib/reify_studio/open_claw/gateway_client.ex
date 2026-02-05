@@ -259,11 +259,11 @@ defmodule ReifyStudio.OpenClaw.GatewayClient do
       "minProtocol" => 1,
       "maxProtocol" => 1,
       "client" => %{
-        "id" => "reify-studio",
+        "id" => "webchat",
         "displayName" => "Reify Studio",
         "version" => "0.1.0",
         "platform" => "elixir",
-        "mode" => "ui",
+        "mode" => "webchat",
         "instanceId" => generate_id()
       }
     }
