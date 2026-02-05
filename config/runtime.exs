@@ -1,20 +1,14 @@
 import Config
+import Dotenvy
 
-# Load .env file if present (dev/test convenience, ignored in prod releases)
-if config_env() != :prod do
-  for file <- [".env", ".env.#{config_env()}"], File.exists?(file) do
-    file
-    |> File.read!()
-    |> String.split("\n", trim: true)
-    |> Enum.reject(&(String.starts_with?(&1, "#") or &1 == ""))
-    |> Enum.each(fn line ->
-      case String.split(line, "=", parts: 2) do
-        [key, value] -> System.put_env(String.trim(key), String.trim(value))
-        _ -> :skip
-      end
-    end)
-  end
-end
+# Load .env files (dev/test convenience, prod uses real env vars)
+env_dir = System.get_env("RELEASE_ROOT") || "."
+
+source!([
+  Path.absname(".env", env_dir),
+  Path.absname(".env.#{config_env()}", env_dir),
+  System.get_env()
+])
 
 # config/runtime.exs is executed for all environments, including
 # during releases. It is executed after compilation and before the
@@ -165,17 +159,7 @@ if config_env() == :prod do
   # See https://hexdocs.pm/swoosh/Swoosh.html#module-installation for details.
 end
 
-# OpenClaw Gateway - env vars override dev.exs defaults (after .env loaded above)
-openclaw_url = System.get_env("OPENCLAW_GATEWAY_URL")
-openclaw_token = System.get_env("OPENCLAW_GATEWAY_TOKEN")
-
-if openclaw_url || openclaw_token do
-  existing = Application.get_env(:reify_studio, :openclaw, [])
-
-  overrides =
-    []
-    |> then(fn acc -> if openclaw_url, do: [{:gateway_url, openclaw_url} | acc], else: acc end)
-    |> then(fn acc -> if openclaw_token, do: [{:gateway_token, openclaw_token} | acc], else: acc end)
-
-  config :reify_studio, :openclaw, Keyword.merge(existing, overrides)
-end
+# OpenClaw Gateway
+config :reify_studio, :openclaw,
+  gateway_url: env!("OPENCLAW_GATEWAY_URL", :string, "ws://host.docker.internal:18789"),
+  gateway_token: env!("OPENCLAW_GATEWAY_TOKEN", :string, nil)
