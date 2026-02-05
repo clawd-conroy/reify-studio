@@ -7,16 +7,16 @@ defmodule ReifyStudio.Application do
 
   @impl true
   def start(_type, _args) do
-    children = [
-      ReifyStudioWeb.Telemetry,
-      ReifyStudio.Repo,
-      {DNSCluster, query: Application.get_env(:reify_studio, :dns_cluster_query) || :ignore},
-      {Phoenix.PubSub, name: ReifyStudio.PubSub},
-      # OpenClaw Gateway WebSocket client
-      {ReifyStudio.OpenClaw.GatewayClient, openclaw_config()},
-      # Start to serve requests, typically the last entry
-      ReifyStudioWeb.Endpoint
-    ]
+    children =
+      [
+        ReifyStudioWeb.Telemetry,
+        ReifyStudio.Repo,
+        {DNSCluster, query: Application.get_env(:reify_studio, :dns_cluster_query) || :ignore},
+        {Phoenix.PubSub, name: ReifyStudio.PubSub},
+        # Start to serve requests, typically the last entry
+        ReifyStudioWeb.Endpoint
+      ] ++ gateway_child()
+
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
@@ -26,6 +26,14 @@ defmodule ReifyStudio.Application do
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
+  defp gateway_child do
+    if Application.get_env(:reify_studio, :openclaw) do
+      [{ReifyStudio.OpenClaw.GatewayClient, openclaw_config()}]
+    else
+      []
+    end
+  end
+
   defp openclaw_config do
     config = Application.get_env(:reify_studio, :openclaw, [])
     url = Keyword.get(config, :gateway_url, "ws://127.0.0.1:18789")
