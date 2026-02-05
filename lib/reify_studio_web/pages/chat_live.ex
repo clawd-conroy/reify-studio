@@ -85,12 +85,11 @@ defmodule ReifyStudioWeb.Pages.ChatLive do
 
       <%!-- Input --%>
       <div class="p-4 bg-base-200">
-        <form phx-submit="send_message" class="flex gap-2">
+        <form phx-submit="send_message" phx-change="update_input" class="flex gap-2">
           <input
             type="text"
             name="message"
             value={@input}
-            phx-change="update_input"
             placeholder="Type a message..."
             class="input input-bordered flex-1 text-lg"
             autocomplete="off"
